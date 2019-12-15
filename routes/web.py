@@ -3,5 +3,6 @@
 from masonite.routes import Get, Post
 
 ROUTES = [
-    Get('/', 'WelcomeController@show').name('welcome'),
+    Post('/links', 'LinkController@store'),
+    Get('/@alias', 'LinkController@redirect')
 ]

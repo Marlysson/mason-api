@@ -11,7 +11,8 @@ class CreateLinksMigration(Migration):
             table.increments('id')
             table.string('alias')
             table.string('redirect_to')
-            table.integer('total_access')
+            table.integer('total_access').default(0)
+            table.timestamps()
 
     def down(self):
         """
