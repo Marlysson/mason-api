@@ -24,6 +24,7 @@ class LinkController(Controller):
                 - Domain valid
                 - Slugfy alias
         '''
+
         errors = self.request.validate(
 
             validator.required('alias'),
@@ -37,11 +38,10 @@ class LinkController(Controller):
             )
         )
 
-        print("entrou no método")
-        print(self.request.all())
-
         if errors:
-            return self.response.json({'errors': errors})
+
+            errors_message = [error for errors_by_input in errors.values() for error in errors_by_input]
+            return self.response.json({'errors': errors_message}, status=400)
 
         else:
 
@@ -56,7 +56,7 @@ class LinkController(Controller):
             shortned_link.redirect_to = redirect_to
             shortned_link.save()
             
-            return self.response.json({"url_shortned": env('APP_URL') + "/" + shortned_link.alias})
+            return self.response.json({"url_shortned": env('APP_URL') + "/" + shortned_link.alias}, status=201)
 
     def redirect(self):
 
