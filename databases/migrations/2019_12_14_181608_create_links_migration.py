@@ -10,7 +10,7 @@ class CreateLinksMigration(Migration):
         with self.schema.create('Links') as table:
             table.increments('id')
             table.string('alias')
-            table.string('redirect_to')
+            table.string('website')
             table.integer('total_access').default(0)
             table.timestamps()
 

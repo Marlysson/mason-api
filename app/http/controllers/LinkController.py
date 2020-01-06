@@ -28,9 +28,9 @@ class LinkController(Controller):
         errors = self.request.validate(
 
             validator.required('alias'),
-            validator.required('redirect_to'),
+            validator.required('website'),
 
-            validator.active_domain('redirect_to'),
+            validator.active_domain('website'),
             
             validator.isnt(
                 validator.is_in('alias', Links.all().lists('alias'),
@@ -48,15 +48,18 @@ class LinkController(Controller):
             shortned_link = Links()
             shortned_link.alias = slugify(self.request.input('alias'))
 
-            redirect_to = self.request.input('redirect_to')
+            website = self.request.input('website')
 
-            if not redirect_to.startswith('http://'):
-                redirect_to = 'http://' + redirect_to
+            if not website.startswith('http://'):
+                website = 'http://' + website
 
-            shortned_link.redirect_to = redirect_to
+            shortned_link.website = website
             shortned_link.save()
             
-            return self.response.json({"url_shortned": env('APP_URL') + "/" + shortned_link.alias}, status=201)
+            data = shortned_link.serialize()
+            data['shortned_link'] = env('APP_URL') + "/" + shortned_link.alias
+
+            return self.response.json(data, status=201)
 
     def redirect(self):
 
@@ -67,7 +70,7 @@ class LinkController(Controller):
             link.total_access += 1
             link.save()
 
-            return self.response.redirect(link.redirect_to)
+            return self.response.redirect(link.website)
 
         else:
 
