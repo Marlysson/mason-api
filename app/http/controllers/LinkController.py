@@ -30,10 +30,10 @@ class LinkController(Controller):
 
         errors = self.request.validate(
 
-            validator.required('alias'),
             validator.required('website'),
-
             validator.active_domain('website'),
+
+            validator.required('alias'),
             
             validator.isnt(
                 validator.is_in('alias', Links.all().lists('alias'),
