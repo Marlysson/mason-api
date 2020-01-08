@@ -1,11 +1,14 @@
 """A LinkController Module."""
 
+from time import sleep
+
+from slugify import slugify
+
 from masonite.request import Request
 from masonite.response import Response
 from masonite.validation import Validator
 from masonite.controllers import Controller
 from masonite.view import View
-from slugify import slugify
 
 from app.Links import Links
 
@@ -38,6 +41,8 @@ class LinkController(Controller):
             )
         )
 
+        sleep(0.5)
+
         if errors:
 
             errors_message = [error for errors_by_input in errors.values() for error in errors_by_input]
@@ -49,6 +54,9 @@ class LinkController(Controller):
             shortned_link.alias = slugify(self.request.input('alias'))
 
             website = self.request.input('website')
+
+            if not website.startswith('www'):
+                website = "www." + website
 
             if not website.startswith('http://'):
                 website = 'http://' + website
